@@ -119,10 +119,6 @@ int	main(int argc, char *argv[])
 		printf("not valid");
 }
 
-//chech the path.
-//chech the extension
-//open the file
-//read line 
-// struct structure to check the map borders and player, and coins;
 //TODO handle this case when the ".ber" is the name of the file,
 //TODO the problem is when i give the full path like this "map/.ber"
+//TODO need to check the borders.
