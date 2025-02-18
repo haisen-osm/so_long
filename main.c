@@ -16,7 +16,7 @@ int check_extension(char *path)
 
 	if (len < 5)
 		return (0);
-	if (strcmp(path + len - 4, ".ber") != 0)
+	if (ft_strcmp(path + len - 4, ".ber") != 0)
 		return (0);
 	int i = len - 5;
 	while (i >= 0)
@@ -87,7 +87,7 @@ void check_map(t_map *map, int fd)
 
 	while ((str = get_next_line(fd)) != NULL)
 	{
-		size_t len = strlen(str);
+		size_t len = ft_strlen(str);
 
 		if (len == 1 && str[0] == '\n')
 			exit_error(ERR_EMPTY_LINE, 0);
@@ -105,6 +105,123 @@ void check_map(t_map *map, int fd)
 		i++;
 	}
 }
+char **grid_map(int rows, int fd)
+{
+	char *str;
+	char **arr = malloc(sizeof(char *) * (rows + 1));
+	int i = 0;
+
+	while (i < rows && (str = get_next_line(fd)) != NULL)
+	{
+		arr[i] = str;
+		i++;
+	}
+	arr[i] = NULL;
+
+	return arr;
+}
+
+char **copy_map(char **grid, size_t rows, size_t cols)
+{
+	char **copy;
+	size_t i;
+
+	copy = (char **)malloc(sizeof(char *) * rows);
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < rows)
+	{
+		copy[i] = (char *)malloc(sizeof(char) * (cols + 1));
+		if (!copy[i])
+		{
+			while (i > 0)
+				free(copy[--i]);
+			free(copy);
+			return (NULL);
+		}
+		ft_strcpy(copy[i], grid[i]);
+		i++;
+	}
+	copy[i] = NULL;
+	return (copy);
+}
+
+void find_player(t_map *map, int *x, int *y)
+{
+	int i = 0;
+	int j;
+	while (i < (int)map->rows)
+	{
+		j = 0;
+		while (map->grid[i][j])
+		{
+			if (map->grid[i][j] == 'P')
+			{
+				*x = i;
+				*y = j;
+				return;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void flood_fill(t_map *map, int x, int y, char **map_copy, int *exit_found, int *coin_found)
+{
+	if (x < 0 || y < 0 || x >= (int)map->rows || y >= (int)map->cols)
+		return;
+	if (map_copy[x][y] == '1' || map_copy[x][y] == 'V')
+		return;
+	if (map_copy[x][y] == 'C')
+		(*coin_found)++;
+	if (map_copy[x][y] == 'E')
+		(*exit_found) = 1;
+	map_copy[x][y] = 'V';
+	flood_fill(map, x + 1, y, map_copy, exit_found, coin_found);
+	flood_fill(map, x - 1, y, map_copy, exit_found, coin_found);
+	flood_fill(map, x, y + 1, map_copy, exit_found, coin_found);
+	flood_fill(map, x, y - 1, map_copy, exit_found, coin_found);
+}
+
+void validate_map(t_map *map)
+{
+	int x, y;
+	find_player(map, &x, &y);
+	int exit_found = 0;
+	int coin_found = 0;
+	flood_fill(map, x, y, map->grid_copy, &exit_found, &coin_found);
+	if (coin_found != map->coin || exit_found != 1)
+		exit_error(ERR_NOT_REACHABLE, 0);
+}
+
+void free_2dmap(char **grid)
+{
+	int i = 0;
+	while (grid[i])
+	{
+		free(grid[i]);
+		i++;
+	}
+	free(grid);
+}
+void print_map(char **grid)
+{
+	int i = 0;
+	int j = 0;
+	while (grid[i])
+	{
+		j = 0;
+		while (grid[i][j])
+		{
+			printf("%c", grid[i][j]);
+			j++;
+		}
+		i++;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	t_map map;
@@ -126,28 +243,12 @@ int main(int argc, char *argv[])
 	if (map.player != 1 || map.coin == 0 || map.exitDor != 1 || map.extra_char > 0)
 		exit_error(ERR_INVALID_MAP, 0);
 
-	map.grid = malloc((sizeof(char *) * map.rows) + 1);
-	char *str;
 	fd = open(argv[1], O_RDONLY);
-	int i = 0;
-	while ((str = get_next_line(fd)) != NULL)
-	{
-		map.grid[i] = str;
-		i++;
-	}
-	map.grid[i] = NULL;
-	i = 0;
-	int j = 0;
-	while (map.grid[i])
-	{
-		j = 0;
-		while (map.grid[i][j])
-		{
-			printf("%c", map.grid[i][j]);
-			j++;
-		}
-		i++;
-	}
-
+	map.grid = grid_map(map.rows, fd);
+	map.grid_copy = copy_map(map.grid, map.rows, map.cols);
+	validate_map(&map);
+	close(fd);
+	print_map(map.grid_copy);
+	free_2dmap(map.grid_copy);
 	return (0);
 }

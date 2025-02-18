@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/18 16:20:40 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/18 21:49:42 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_map
 #define ERR_OPEN "Failed to open the file. "
 #define ERR_EMPTY_LINE "Empty line in the map."
 #define ERR_INVALID_MAP "Invalid map structure."
+#define ERR_NOT_REACHABLE "can't reach all the colaictables"
 #define BUFFER_SIZE 1370
 // get_next_line functions
 char *get_next_line(int fd);
@@ -52,4 +53,6 @@ char *ft_strdup(const char *s);
 char *ft_strjoin(char *s1, char *s2);
 char *ft_strchr(const char *s, int c);
 char *ft_strcpy(char *dest, const char *src);
+int ft_strcmp(char *s1, char *s2);
+
 #endif
