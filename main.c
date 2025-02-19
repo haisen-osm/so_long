@@ -222,9 +222,8 @@ void print_map(char **grid)
 	}
 }
 
-int main(int argc, char *argv[])
+void ft_parsing(t_map *map, int argc, char **argv)
 {
-	t_map map;
 	int fd;
 
 	check_arguments(argc, argv);
@@ -232,22 +231,27 @@ int main(int argc, char *argv[])
 	if (fd < 0)
 		exit_error(ERR_OPEN, 1);
 
-	initialize_map(&map);
-	check_map(&map, fd);
+	initialize_map(map);
+	check_map(map, fd);
 	close(fd);
-
-	if (map.rows < 3 || map.cols < 3)
+	if (map->rows < 3 || map->cols < 3)
 		exit_error(ERR_INVALID_MAP, 0);
-	if (!map.is_valid)
+	if (!map->is_valid)
 		exit_error(ERR_INVALID_MAP, 0);
-	if (map.player != 1 || map.coin == 0 || map.exitDor != 1 || map.extra_char > 0)
+	if (map->player != 1 || map->coin == 0 || map->exitDor != 1 || map->extra_char > 0)
 		exit_error(ERR_INVALID_MAP, 0);
 
 	fd = open(argv[1], O_RDONLY);
-	map.grid = grid_map(map.rows, fd);
-	map.grid_copy = copy_map(map.grid, map.rows, map.cols);
-	validate_map(&map);
+	map->grid = grid_map(map->rows, fd);
+	map->grid_copy = copy_map(map->grid, map->rows, map->cols);
+	validate_map(map);
 	close(fd);
+}
+
+int main(int argc, char *argv[])
+{
+	t_map map;
+	ft_parsing(&map, argc, argv);
 	print_map(map.grid_copy);
 	free_2dmap(map.grid_copy);
 	return (0);
