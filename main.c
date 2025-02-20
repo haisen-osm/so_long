@@ -248,11 +248,85 @@ void ft_parsing(t_map *map, int argc, char **argv)
 	close(fd);
 }
 
+void game_init(t_map *map, t_game *game)
+{
+	game->mlx = mlx_init();
+	if (!game->mlx)
+		exit_error(ERR_MLX_FAILED, 0);
+	game->map = map;
+	game->win = mlx_new_window(game->mlx, game->map->cols * 32, game->map->rows * 32, GAME_TITLE);
+	if (!game->win)
+		exit_error(ERR_MLX_FAILED, 0);
+	int x = 32;
+	int y = 32;
+	void *img = mlx_xpm_file_to_image(game->mlx, "textures/playerTrab.xpm", &x, &y);
+	if (!img)
+		exit(EXIT_FAILURE);
+	void *img1 = mlx_xpm_file_to_image(game->mlx, "textures/diamondTrab.xpm", &x, &y);
+	if (!img1)
+		exit(EXIT_FAILURE);
+
+	mlx_put_image_to_window(game->mlx, game->win, img, 0, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 32, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 64, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 96, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 128, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 160, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 192, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 224, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 256, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 288, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 320, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 352, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 384, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 416, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 448, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 480, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 512, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 544, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 576, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 608, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 640, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 672, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 704, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 736, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 768, 0);
+	mlx_put_image_to_window(game->mlx, game->win, img, 800, 0);
+	//
+	mlx_put_image_to_window(game->mlx, game->win, img1, 288, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 320, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 352, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 384, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 416, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 448, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 480, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 512, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 544, 32);
+	mlx_put_image_to_window(game->mlx, game->win, img1, 576, 32);
+}
+
 int main(int argc, char *argv[])
 {
 	t_map map;
+	t_game game;
 	ft_parsing(&map, argc, argv);
-	print_map(map.grid_copy);
-	free_2dmap(map.grid_copy);
+	// free_2dmap(map.grid_copy);
+	// void *mlx;
+	// void *win;
+	// void *img;
+	// int img_width;
+	// int img_height;
+	game_init(&map, &game);
+
+	// // Load image from XPM file (64x64 pixels)
+	// img = mlx_xpm_file_to_image(mlx, "dino.xpm", &img_width, &img_height);
+	// if (!img)
+	// 	exit(EXIT_FAILURE);
+
+	// // Put image at position (100, 150) in the window
+
+	// // Keep the window open
+	while (1)
+		;
 	return (0);
 }

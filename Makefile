@@ -7,7 +7,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L./minilibx-linux -lmlx -lX11 -lXext -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)

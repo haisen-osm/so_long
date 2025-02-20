@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "minilibx-linux/mlx.h"
 // #include <mlx.h>
 
 typedef struct s_map
@@ -34,6 +35,18 @@ typedef struct s_map
 	char **grid_copy;
 } t_map;
 
+typedef struct s_game
+{
+	void *mlx;
+	void *win;
+	t_map *map;
+	int player_x;
+	int player_y;
+	void *dino;
+	void *grass;
+	void *wall;
+} t_game;
+
 #define EXTENSTION ".ber"
 #define ERR_ARGS "Invalid number of arguments.\n"
 #define ERR_EXT "Wrong file extension. Expected '.ber'.\n"
@@ -41,6 +54,9 @@ typedef struct s_map
 #define ERR_EMPTY_LINE "Empty line detected in the map.\n"
 #define ERR_INVALID_MAP "Invalid map structure.\n"
 #define ERR_NOT_REACHABLE "Not all collectibles are reachable.\n"
+#define ERR_MLX_FAILED "Mlx connection failed\n"
+#define ERR_WIN_FAIL "Mlx failed creating a window\n"
+#define GAME_TITLE "so_long"
 #define BUFFER_SIZE 1370
 // get_next_line functions
 char *get_next_line(int fd);
