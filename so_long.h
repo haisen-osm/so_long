@@ -42,8 +42,9 @@ typedef struct s_game
 	t_map *map;
 	int player_x;
 	int player_y;
-	void *dino;
+	void *player;
 	void *grass;
+	void *diamond;
 	void *wall;
 } t_game;
 

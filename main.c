@@ -259,50 +259,44 @@ void game_init(t_map *map, t_game *game)
 		exit_error(ERR_MLX_FAILED, 0);
 	int x = 32;
 	int y = 32;
-	void *img = mlx_xpm_file_to_image(game->mlx, "textures/playerTrab.xpm", &x, &y);
-	if (!img)
+	game->player = mlx_xpm_file_to_image(game->mlx, "textures/playerTrab.xpm", &x, &y);
+	if (!game->player)
 		exit(EXIT_FAILURE);
-	void *img1 = mlx_xpm_file_to_image(game->mlx, "textures/diamondTrab.xpm", &x, &y);
-	if (!img1)
+	game->diamond = mlx_xpm_file_to_image(game->mlx, "textures/diamondTrab.xpm", &x, &y);
+	if (!game->diamond)
 		exit(EXIT_FAILURE);
+	game->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &x, &y);
+	if (!game->wall)
+		exit(EXIT_FAILURE);
+	game->grass = mlx_xpm_file_to_image(game->mlx, "textures/trab.xpm", &x, &y);
+	if (!game->grass)
+		exit(EXIT_FAILURE);
+}
 
-	mlx_put_image_to_window(game->mlx, game->win, img, 0, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 32, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 64, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 96, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 128, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 160, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 192, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 224, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 256, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 288, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 320, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 352, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 384, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 416, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 448, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 480, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 512, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 544, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 576, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 608, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 640, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 672, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 704, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 736, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 768, 0);
-	mlx_put_image_to_window(game->mlx, game->win, img, 800, 0);
-	//
-	mlx_put_image_to_window(game->mlx, game->win, img1, 288, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 320, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 352, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 384, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 416, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 448, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 480, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 512, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 544, 32);
-	mlx_put_image_to_window(game->mlx, game->win, img1, 576, 32);
+void map_rendering(t_game *game)
+{
+	size_t i = 0, j = 0;
+	int xx = 0, yy = 0;
+	while (i < game->map->rows)
+	{
+		j = 0;
+		xx = 0;
+		while (j < game->map->cols)
+		{
+			if (game->map->grid[i][j] == '1')
+				mlx_put_image_to_window(game->mlx, game->win, game->wall, xx, yy);
+			else if (game->map->grid[i][j] == '0')
+				mlx_put_image_to_window(game->mlx, game->win, game->grass, xx, yy);
+			else if (game->map->grid[i][j] == 'P')
+				mlx_put_image_to_window(game->mlx, game->win, game->player, xx, yy);
+			else if (game->map->grid[i][j] == 'C')
+				mlx_put_image_to_window(game->mlx, game->win, game->diamond, xx, yy);
+			xx += 32;
+			j++;
+		}
+		yy += 32;
+		i++;
+	}
 }
 
 int main(int argc, char *argv[])
@@ -310,6 +304,7 @@ int main(int argc, char *argv[])
 	t_map map;
 	t_game game;
 	ft_parsing(&map, argc, argv);
+	// print_map(map.grid);
 	// free_2dmap(map.grid_copy);
 	// void *mlx;
 	// void *win;
@@ -317,7 +312,7 @@ int main(int argc, char *argv[])
 	// int img_width;
 	// int img_height;
 	game_init(&map, &game);
-
+	map_rendering(&game);
 	// // Load image from XPM file (64x64 pixels)
 	// img = mlx_xpm_file_to_image(mlx, "dino.xpm", &img_width, &img_height);
 	// if (!img)
