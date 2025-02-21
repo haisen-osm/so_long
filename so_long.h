@@ -46,6 +46,7 @@ typedef struct s_game
 	void *grass;
 	void *diamond;
 	void *wall;
+	void *door;
 } t_game;
 
 #define EXTENSTION ".ber"

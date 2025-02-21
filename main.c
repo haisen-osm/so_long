@@ -271,6 +271,16 @@ void game_init(t_map *map, t_game *game)
 	game->grass = mlx_xpm_file_to_image(game->mlx, "textures/trab.xpm", &x, &y);
 	if (!game->grass)
 		exit(EXIT_FAILURE);
+	game->door = mlx_xpm_file_to_image(game->mlx, "textures/door.xpm", &x, &y);
+	if (!game->door)
+		exit(EXIT_FAILURE);
+}
+
+void my_mlx_img(t_game *game, void *img, int x, int y)
+{
+	int mlx_img = mlx_put_image_to_window(game->mlx, game->win, img, x, y);
+	if (!mlx_img)
+		exit(EXIT_FAILURE);
 }
 
 void map_rendering(t_game *game)
@@ -284,13 +294,15 @@ void map_rendering(t_game *game)
 		while (j < game->map->cols)
 		{
 			if (game->map->grid[i][j] == '1')
-				mlx_put_image_to_window(game->mlx, game->win, game->wall, xx, yy);
+				my_mlx_img(game, game->wall, xx, yy);
 			else if (game->map->grid[i][j] == '0')
-				mlx_put_image_to_window(game->mlx, game->win, game->grass, xx, yy);
+				my_mlx_img(game, game->grass, xx, yy);
 			else if (game->map->grid[i][j] == 'P')
-				mlx_put_image_to_window(game->mlx, game->win, game->player, xx, yy);
+				my_mlx_img(game, game->player, xx, yy);
 			else if (game->map->grid[i][j] == 'C')
-				mlx_put_image_to_window(game->mlx, game->win, game->diamond, xx, yy);
+				my_mlx_img(game, game->diamond, xx, yy);
+			else if (game->map->grid[i][j] == 'E')
+				my_mlx_img(game, game->door, xx, yy);
 			xx += 32;
 			j++;
 		}
@@ -299,29 +311,38 @@ void map_rendering(t_game *game)
 	}
 }
 
+int key_hook(int keycode, void *param)
+{
+	// (void)param;
+	t_game *game = (t_game *)param;
+	printf("%d\n", game->player_y);
+	if (keycode == 119)
+	{
+
+		printf("UP\n");
+		(game->player_y)++;
+	}
+
+	// 	else if (keycode == 97)
+	// else if (keycode == 100)
+	// 	printf("RIGHT\n");
+	// else if (keycode == 115)
+	// 	printf("DOWN\n");
+
+	return (0);
+}
+
 int main(int argc, char *argv[])
 {
 	t_map map;
 	t_game game;
 	ft_parsing(&map, argc, argv);
 	// print_map(map.grid);
-	// free_2dmap(map.grid_copy);
-	// void *mlx;
-	// void *win;
-	// void *img;
-	// int img_width;
-	// int img_height;
+	free_2dmap(map.grid_copy);
 	game_init(&map, &game);
 	map_rendering(&game);
-	// // Load image from XPM file (64x64 pixels)
-	// img = mlx_xpm_file_to_image(mlx, "dino.xpm", &img_width, &img_height);
-	// if (!img)
-	// 	exit(EXIT_FAILURE);
 
-	// // Put image at position (100, 150) in the window
-
-	// // Keep the window open
-	while (1)
-		;
+	mlx_key_hook(game.win, key_hook, &game);
+	mlx_loop(game.mlx);
 	return (0);
 }
