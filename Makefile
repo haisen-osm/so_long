@@ -2,7 +2,7 @@ NAME = so_long
 SRCS = helpers/ft_strchr.c helpers/ft_strcmp.c helpers/ft_strcpy.c helpers/ft_strdup.c helpers/ft_strjoin.c helpers/ft_strlen.c helpers/get_next_line.c main.c
 OBJS = $(SRCS:.c=.o)
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g 
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 all: $(NAME)
 
