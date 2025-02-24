@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "minilibx-linux/mlx.h"
+#include <X11/keysym.h>
 // #include <mlx.h>
 
 typedef struct s_map
@@ -29,7 +30,7 @@ typedef struct s_map
 	int is_valid;
 	int player;
 	int coin;
-	int exitDor;
+	int exitDoor;
 	int extra_char;
 	char **grid;
 	char **grid_copy;
@@ -47,6 +48,7 @@ typedef struct s_game
 	void *diamond;
 	void *wall;
 	void *door;
+	int collected_coins;
 } t_game;
 
 #define EXTENSTION ".ber"

@@ -2,9 +2,9 @@
 
 void exit_error(char *err, int per)
 {
-	write(1, "Error\n", 6);
+	write(2, "Error\n", 6);
 	if (err)
-		write(1, err, ft_strlen(err));
+		write(2, err, ft_strlen(err));
 	if (per)
 		perror("");
 	exit(EXIT_FAILURE);
@@ -38,7 +38,6 @@ void check_borders(char *str, t_map *map, int is_first, int is_last)
 			map->is_valid = 0;
 		else if ((i == 0 || i == (int)map->cols - 1) && str[i] != '1')
 			map->is_valid = 0;
-
 		i++;
 	}
 }
@@ -53,7 +52,7 @@ void check_player_and_coins(char *str, t_map *map)
 		else if (str[i] == 'C')
 			map->coin++;
 		else if (str[i] == 'E')
-			map->exitDor++;
+			map->exitDoor++; // Renamed from exitDor
 		else if (str[i] != '0' && str[i] != '1')
 			map->extra_char++;
 		i++;
@@ -76,7 +75,7 @@ void initialize_map(t_map *map)
 	map->is_valid = 1;
 	map->player = 0;
 	map->coin = 0;
-	map->exitDor = 0;
+	map->exitDoor = 0;
 	map->extra_char = 0;
 }
 
@@ -88,23 +87,20 @@ void check_map(t_map *map, int fd)
 	while ((str = get_next_line(fd)) != NULL)
 	{
 		size_t len = ft_strlen(str);
-
 		if (len == 1 && str[0] == '\n')
 			exit_error(ERR_EMPTY_LINE, 0);
-
 		if (map->rows == 0)
 			map->cols = (str[len - 1] == '\n') ? len - 1 : len;
 		else if (map->cols != ((str[len - 1] == '\n') ? len - 1 : len))
 			map->is_valid = 0;
-
 		check_borders(str, map, i == 0, str[len - 1] == '\0');
 		check_player_and_coins(str, map);
-
 		free(str);
 		map->rows++;
 		i++;
 	}
 }
+
 char **grid_map(int rows, int fd)
 {
 	char *str;
@@ -117,7 +113,6 @@ char **grid_map(int rows, int fd)
 		i++;
 	}
 	arr[i] = NULL;
-
 	return arr;
 }
 
@@ -147,10 +142,13 @@ char **copy_map(char **grid, size_t rows, size_t cols)
 	return (copy);
 }
 
-void find_player(t_map *map, int *x, int *y)
+/*
+   Updated: find_player now returns row and col
+   (first coordinate is row, second is column)
+*/
+void find_player(t_map *map, int *row, int *col)
 {
-	int i = 0;
-	int j;
+	int i = 0, j;
 	while (i < (int)map->rows)
 	{
 		j = 0;
@@ -158,8 +156,8 @@ void find_player(t_map *map, int *x, int *y)
 		{
 			if (map->grid[i][j] == 'P')
 			{
-				*x = i;
-				*y = j;
+				*row = i;
+				*col = j;
 				return;
 			}
 			j++;
@@ -168,30 +166,30 @@ void find_player(t_map *map, int *x, int *y)
 	}
 }
 
-void flood_fill(t_map *map, int x, int y, char **map_copy, int *exit_found, int *coin_found)
+void flood_fill(t_map *map, int row, int col, char **map_copy, int *exit_found, int *coin_found)
 {
-	if (x < 0 || y < 0 || x >= (int)map->rows || y >= (int)map->cols)
+	if (row < 0 || col < 0 || row >= (int)map->rows || col >= (int)map->cols)
 		return;
-	if (map_copy[x][y] == '1' || map_copy[x][y] == 'V')
+	if (map_copy[row][col] == '1' || map_copy[row][col] == 'V')
 		return;
-	if (map_copy[x][y] == 'C')
+	if (map_copy[row][col] == 'C')
 		(*coin_found)++;
-	if (map_copy[x][y] == 'E')
+	if (map_copy[row][col] == 'E')
 		(*exit_found) = 1;
-	map_copy[x][y] = 'V';
-	flood_fill(map, x + 1, y, map_copy, exit_found, coin_found);
-	flood_fill(map, x - 1, y, map_copy, exit_found, coin_found);
-	flood_fill(map, x, y + 1, map_copy, exit_found, coin_found);
-	flood_fill(map, x, y - 1, map_copy, exit_found, coin_found);
+	map_copy[row][col] = 'V';
+	flood_fill(map, row + 1, col, map_copy, exit_found, coin_found);
+	flood_fill(map, row - 1, col, map_copy, exit_found, coin_found);
+	flood_fill(map, row, col + 1, map_copy, exit_found, coin_found);
+	flood_fill(map, row, col - 1, map_copy, exit_found, coin_found);
 }
 
 void validate_map(t_map *map)
 {
-	int x, y;
-	find_player(map, &x, &y);
+	int row, col;
+	find_player(map, &row, &col);
 	int exit_found = 0;
 	int coin_found = 0;
-	flood_fill(map, x, y, map->grid_copy, &exit_found, &coin_found);
+	flood_fill(map, row, col, map->grid_copy, &exit_found, &coin_found);
 	if (coin_found != map->coin || exit_found != 1)
 		exit_error(ERR_NOT_REACHABLE, 0);
 }
@@ -206,10 +204,10 @@ void free_2dmap(char **grid)
 	}
 	free(grid);
 }
+
 void print_map(char **grid)
 {
-	int i = 0;
-	int j = 0;
+	int i = 0, j;
 	while (grid[i])
 	{
 		j = 0;
@@ -220,60 +218,6 @@ void print_map(char **grid)
 		}
 		i++;
 	}
-}
-
-void ft_parsing(t_map *map, int argc, char **argv)
-{
-	int fd;
-
-	check_arguments(argc, argv);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-		exit_error(ERR_OPEN, 1);
-
-	initialize_map(map);
-	check_map(map, fd);
-	close(fd);
-	if (map->rows < 3 || map->cols < 3)
-		exit_error(ERR_INVALID_MAP, 0);
-	if (!map->is_valid)
-		exit_error(ERR_INVALID_MAP, 0);
-	if (map->player != 1 || map->coin == 0 || map->exitDor != 1 || map->extra_char > 0)
-		exit_error(ERR_INVALID_MAP, 0);
-
-	fd = open(argv[1], O_RDONLY);
-	map->grid = grid_map(map->rows, fd);
-	map->grid_copy = copy_map(map->grid, map->rows, map->cols);
-	validate_map(map);
-	close(fd);
-}
-
-void game_init(t_map *map, t_game *game)
-{
-	game->mlx = mlx_init();
-	if (!game->mlx)
-		exit_error(ERR_MLX_FAILED, 0);
-	game->map = map;
-	game->win = mlx_new_window(game->mlx, game->map->cols * 32, game->map->rows * 32, GAME_TITLE);
-	if (!game->win)
-		exit_error(ERR_MLX_FAILED, 0);
-	int x = 32;
-	int y = 32;
-	game->player = mlx_xpm_file_to_image(game->mlx, "textures/playerTrab.xpm", &x, &y);
-	if (!game->player)
-		exit(EXIT_FAILURE);
-	game->diamond = mlx_xpm_file_to_image(game->mlx, "textures/diamondTrab.xpm", &x, &y);
-	if (!game->diamond)
-		exit(EXIT_FAILURE);
-	game->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &x, &y);
-	if (!game->wall)
-		exit(EXIT_FAILURE);
-	game->grass = mlx_xpm_file_to_image(game->mlx, "textures/trab.xpm", &x, &y);
-	if (!game->grass)
-		exit(EXIT_FAILURE);
-	game->door = mlx_xpm_file_to_image(game->mlx, "textures/door.xpm", &x, &y);
-	if (!game->door)
-		exit(EXIT_FAILURE);
 }
 
 void my_mlx_img(t_game *game, void *img, int x, int y)
@@ -311,23 +255,135 @@ void map_rendering(t_game *game)
 	}
 }
 
-int key_hook(int keycode, void *param)
+void ft_parsing(t_map *map, int argc, char **argv)
 {
-	// (void)param;
-	t_game *game = (t_game *)param;
-	printf("%d\n", game->player_y);
-	if (keycode == 119)
-	{
+	int fd;
 
-		printf("UP\n");
-		(game->player_y)++;
+	check_arguments(argc, argv);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		exit_error(ERR_OPEN, 1);
+	initialize_map(map);
+	check_map(map, fd);
+	close(fd);
+	if (map->rows < 3 || map->cols < 3)
+		exit_error(ERR_INVALID_MAP, 0);
+	if (!map->is_valid)
+		exit_error(ERR_INVALID_MAP, 0);
+	if (map->player != 1 || map->coin == 0 || map->exitDoor != 1 || map->extra_char > 0)
+		exit_error(ERR_INVALID_MAP, 0);
+
+	fd = open(argv[1], O_RDONLY);
+	map->grid = grid_map(map->rows, fd);
+	map->grid_copy = copy_map(map->grid, map->rows, map->cols);
+	validate_map(map);
+	close(fd);
+}
+
+void game_init(t_map *map, t_game *game)
+{
+	game->mlx = mlx_init();
+	if (!game->mlx)
+		exit_error(ERR_MLX_FAILED, 0);
+	game->map = map;
+	game->win = mlx_new_window(game->mlx, game->map->cols * 32, game->map->rows * 32, GAME_TITLE);
+	if (!game->win)
+		exit_error(ERR_MLX_FAILED, 0);
+	int x = 32, y = 32;
+	game->player = mlx_xpm_file_to_image(game->mlx, "textures/playerTrab.xpm", &x, &y);
+	if (!game->player)
+		exit(EXIT_FAILURE);
+	game->diamond = mlx_xpm_file_to_image(game->mlx, "textures/diamondTrab.xpm", &x, &y);
+	if (!game->diamond)
+		exit(EXIT_FAILURE);
+	game->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &x, &y);
+	if (!game->wall)
+		exit(EXIT_FAILURE);
+	game->grass = mlx_xpm_file_to_image(game->mlx, "textures/trab.xpm", &x, &y);
+	if (!game->grass)
+		exit(EXIT_FAILURE);
+	game->door = mlx_xpm_file_to_image(game->mlx, "textures/door.xpm", &x, &y);
+	if (!game->door)
+		exit(EXIT_FAILURE);
+	game->collected_coins = 0;
+}
+
+void move_player(t_game *game, int row_delta, int col_delta)
+{
+	int row = 0, col = 0;
+	find_player(game->map, &row, &col);
+
+	int new_row = row + row_delta;
+	int new_col = col + col_delta;
+
+	if (new_row < 0 || new_row >= (int)game->map->rows ||
+		new_col < 0 || new_col >= (int)game->map->cols)
+		return;
+
+	if (game->map->grid[new_row][new_col] == '1')
+		return;
+
+	if (game->map->grid[new_row][new_col] == 'C')
+		game->collected_coins++;
+
+	if (game->map->grid[new_row][new_col] == 'E' &&
+		game->map->coin == game->collected_coins)
+	{
+		printf("You won!\n");
+		exit(0);
+	}
+	if (game->map->grid[new_row][new_col] == 'E' &&
+		game->map->coin != game->collected_coins)
+	{
+		return;
 	}
 
-	// 	else if (keycode == 97)
-	// else if (keycode == 100)
-	// 	printf("RIGHT\n");
-	// else if (keycode == 115)
-	// 	printf("DOWN\n");
+	// Redraw the old position as floor
+	mlx_put_image_to_window(game->mlx, game->win, game->grass, col * 32, row * 32);
+	// Draw the player at the new position
+	mlx_put_image_to_window(game->mlx, game->win, game->player, new_col * 32, new_row * 32);
+
+	// Update the grid
+	game->map->grid[new_row][new_col] = 'P';
+	game->map->grid[row][col] = '0';
+}
+
+/*
+   Updated key_hook:
+   'w' -> up (-1, 0)
+   's' -> down (1, 0)
+   'a' -> left (0, -1)
+   'd' -> right (0, 1)
+*/
+int key_hook(int keycode, void *param)
+{
+	t_game *game = (t_game *)param;
+
+	if (keycode == 119) // 'w'
+	{
+		move_player(game, -1, 0);
+		printf("UP\n");
+	}
+	else if (keycode == 115) // 's'
+	{
+		move_player(game, 1, 0);
+		printf("DOWN\n");
+	}
+	else if (keycode == 97) // 'a'
+	{
+		move_player(game, 0, -1);
+		printf("LEFT\n");
+	}
+	else if (keycode == 100) // 'd'
+	{
+		move_player(game, 0, 1);
+		printf("RIGHT\n");
+	}
+	else if (keycode == XK_Escape)
+	{
+		mlx_destroy_window(game->mlx, game->win);
+		exit(0);
+	}
 
 	return (0);
 }
@@ -336,9 +392,10 @@ int main(int argc, char *argv[])
 {
 	t_map map;
 	t_game game;
+
 	ft_parsing(&map, argc, argv);
-	// print_map(map.grid);
 	free_2dmap(map.grid_copy);
+	print_map(map.grid);
 	game_init(&map, &game);
 	map_rendering(&game);
 
