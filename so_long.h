@@ -47,7 +47,8 @@ typedef struct s_game
 	void *grass;
 	void *diamond;
 	void *wall;
-	void *door;
+	void *open_door;
+	void *broke_door;
 	int collected_coins;
 } t_game;
 
@@ -75,6 +76,7 @@ char *ft_strjoin(char *s1, char *s2);
 char *ft_strchr(const char *s, int c);
 char *ft_strcpy(char *dest, const char *src);
 int ft_strcmp(char *s1, char *s2);
+void ft_putstr(char *str);
 // error printer
 void exit_error(char *err, int per);
 // parsing utils
@@ -90,7 +92,6 @@ char **copy_map(char **grid, size_t rows, size_t cols);
 void find_player(t_map *map, int *x, int *y);
 void flood_fill(t_map *map, int x, int y, char **map_copy, int *exit_found, int *coin_found);
 void validate_map(t_map *map);
-void print_map(char **grid);
 // memory management
 void free_2dmap(char **grid);
 #endif

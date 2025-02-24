@@ -142,7 +142,6 @@ char **copy_map(char **grid, size_t rows, size_t cols)
 	return (copy);
 }
 
-/* Returns row and col coordinates (row first, col second) */
 void find_player(t_map *map, int *row, int *col)
 {
 	int i = 0, j;
@@ -152,6 +151,25 @@ void find_player(t_map *map, int *row, int *col)
 		while (map->grid[i][j])
 		{
 			if (map->grid[i][j] == 'P')
+			{
+				*row = i;
+				*col = j;
+				return;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+void find_door(t_map *map, int *row, int *col)
+{
+	int i = 0, j;
+	while (i < (int)map->rows)
+	{
+		j = 0;
+		while (map->grid[i][j])
+		{
+			if (map->grid[i][j] == 'E')
 			{
 				*row = i;
 				*col = j;
@@ -202,21 +220,6 @@ void free_2dmap(char **grid)
 	free(grid);
 }
 
-void print_map(char **grid)
-{
-	int i = 0, j;
-	while (grid[i])
-	{
-		j = 0;
-		while (grid[i][j])
-		{
-			printf("%c", grid[i][j]);
-			j++;
-		}
-		i++;
-	}
-}
-
 void my_mlx_img(t_game *game, void *img, int x, int y)
 {
 	int mlx_img = mlx_put_image_to_window(game->mlx, game->win, img, x, y);
@@ -243,7 +246,7 @@ void map_rendering(t_game *game)
 			else if (game->map->grid[i][j] == 'C')
 				my_mlx_img(game, game->diamond, xx, yy);
 			else if (game->map->grid[i][j] == 'E')
-				my_mlx_img(game, game->door, xx, yy);
+				my_mlx_img(game, game->broke_door, xx, yy);
 			xx += 64;
 			j++;
 		}
@@ -252,7 +255,6 @@ void map_rendering(t_game *game)
 	}
 }
 
-/* New close_game function to free all allocated resources */
 void close_game(t_game *game)
 {
 	if (game->player)
@@ -263,8 +265,8 @@ void close_game(t_game *game)
 		mlx_destroy_image(game->mlx, game->wall);
 	if (game->grass)
 		mlx_destroy_image(game->mlx, game->grass);
-	if (game->door)
-		mlx_destroy_image(game->mlx, game->door);
+	if (game->broke_door)
+		mlx_destroy_image(game->mlx, game->broke_door);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
@@ -276,8 +278,6 @@ void close_game(t_game *game)
 	{
 		if (game->map->grid)
 			free_2dmap(game->map->grid);
-		// if (game->map->grid_copy)
-		// 	free_2dmap(game->map->grid_copy);
 	}
 	exit(0);
 }
@@ -329,39 +329,45 @@ void game_init(t_map *map, t_game *game)
 	game->grass = mlx_xpm_file_to_image(game->mlx, "new/0.xpm", &x, &y);
 	if (!game->grass)
 		exit(EXIT_FAILURE);
-	game->door = mlx_xpm_file_to_image(game->mlx, "new/E_0.xpm", &x, &y);
-	if (!game->door)
+	game->broke_door = mlx_xpm_file_to_image(game->mlx, "new/E_1.xpm", &x, &y);
+	if (!game->broke_door)
+		exit(EXIT_FAILURE);
+	game->open_door = mlx_xpm_file_to_image(game->mlx, "new/E_0.xpm", &x, &y);
+	if (!game->open_door)
 		exit(EXIT_FAILURE);
 	game->collected_coins = 0;
 }
 
 void move_player(t_game *game, int row_delta, int col_delta)
 {
-	int row = 0, col = 0;
+	int row = 0, col = 0, drow = 0, dcol = 0;
 	find_player(game->map, &row, &col);
-
+	find_door(game->map, &drow, &dcol);
 	int new_row = row + row_delta;
 	int new_col = col + col_delta;
 
 	if (new_row < 0 || new_row >= (int)game->map->rows ||
 		new_col < 0 || new_col >= (int)game->map->cols)
 		return;
-
+	if (game->map->coin == game->collected_coins)
+		mlx_put_image_to_window(game->mlx, game->win, game->open_door, dcol * 64, drow * 64);
 	if (game->map->grid[new_row][new_col] == '1')
 		return;
 	if (game->map->grid[new_row][new_col] == 'C')
+	{
 		game->collected_coins++;
+		if (game->map->coin == game->collected_coins)
+			mlx_put_image_to_window(game->mlx, game->win, game->open_door, dcol * 64, drow * 64);
+	}
 	if (game->map->grid[new_row][new_col] == 'E' &&
 		game->map->coin == game->collected_coins)
 	{
-		printf("You won!\n");
+		ft_putstr("You won!\n");
 		close_game(game);
 	}
 	if (game->map->grid[new_row][new_col] == 'E' &&
 		game->map->coin != game->collected_coins)
-	{
 		return;
-	}
 	mlx_put_image_to_window(game->mlx, game->win, game->grass, col * 64, row * 64);
 	mlx_put_image_to_window(game->mlx, game->win, game->player, new_col * 64, new_row * 64);
 	game->map->grid[new_row][new_col] = 'P';
@@ -375,27 +381,25 @@ int key_hook(int keycode, void *param)
 	if (keycode == 119)
 	{
 		move_player(game, -1, 0);
-		printf("UP\n");
+		ft_putstr("UP\n");
 	}
 	else if (keycode == 115)
 	{
 		move_player(game, 1, 0);
-		printf("DOWN\n");
+		ft_putstr("DOWN\n");
 	}
 	else if (keycode == 97)
 	{
 		move_player(game, 0, -1);
-		printf("LEFT\n");
+		ft_putstr("LEFT\n");
 	}
 	else if (keycode == 100)
 	{
 		move_player(game, 0, 1);
-		printf("RIGHT\n");
+		ft_putstr("RIGHT\n");
 	}
 	else if (keycode == XK_Escape)
-	{
 		close_game(game);
-	}
 
 	return (0);
 }
@@ -407,11 +411,8 @@ int main(int argc, char *argv[])
 
 	ft_parsing(&map, argc, argv);
 	free_2dmap(map.grid_copy);
-	// free_2dmap(map.grid);
-	print_map(map.grid);
 	game_init(&map, &game);
 	map_rendering(&game);
-
 	mlx_key_hook(game.win, key_hook, &game);
 	mlx_loop(game.mlx);
 	return (0);
