@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/19 17:37:21 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:46:29 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "minilibx-linux/mlx.h"
-#include <X11/keysym.h>
+// #include <X11/keysym.h>
 // #include <mlx.h>
 
 typedef struct s_map
@@ -32,6 +32,8 @@ typedef struct s_map
 	int extra_char;
 	char **grid;
 	char **grid_copy;
+	int door_col;
+	int door_row;
 } t_map;
 
 typedef struct s_game
@@ -50,12 +52,12 @@ typedef struct s_game
 } t_game;
 
 #define EXTENSTION ".ber"
-#define ERR_ARGS "Invalid number of arguments.\n"
-#define ERR_EXT "Wrong file extension. Expected '.ber'.\n"
-#define ERR_OPEN "Failed to open the file.\n"
-#define ERR_EMPTY_LINE "Empty line detected in the map.\n"
-#define ERR_INVALID_MAP "Invalid map structure.\n"
-#define ERR_NOT_REACHABLE "Not all collectibles are reachable.\n"
+#define ERR_ARGS "Invalid number of arguments\n"
+#define ERR_EXT "Wrong file extension. Expected '.ber'\n"
+#define ERR_OPEN "Failed to open the file\n"
+#define ERR_EMPTY_LINE "Empty line detected in the map\n"
+#define ERR_INVALID_MAP "Invalid map structure\n"
+#define ERR_NOT_REACHABLE "Not all collectibles are reachable\n"
 #define ERR_MLX_FAILED "Mlx connection failed\n"
 #define ERR_WIN_FAIL "Mlx failed creating a window\n"
 #define GAME_TITLE "so_long"
@@ -77,22 +79,34 @@ int ft_strcmp(char *s1, char *s2);
 void ft_putstr(char *str);
 void ft_putnbr(int n);
 void ft_putchar(char c);
-// error printer
+// clean and exit
 void exit_error(char *err, int per);
-// parsing utils
-void ft_parsing(t_map *map, int argc, char **argv);
+void free_2dmap(char **grid);
+int close_game(t_game *game);
+// checkers
 int check_extension(char *path);
 void check_borders(char *str, t_map *map, int is_first, int is_last);
 void check_player_and_coins(char *str, t_map *map);
 void check_arguments(int argc, char *argv[]);
-void initialize_map(t_map *map);
 void check_map(t_map *map, int fd);
+// game rendering
+void my_mlx_img(t_game *game, void *img, int x, int y);
+void map_rendering(t_game *game);
+// initializing
+void initialize_map(t_map *map);
+void xpm_to_image(void *img, void *mlx, char *path);
+void game_init(t_map *map, t_game *game);
+// parsing utils
+void find_player(t_map *map, int *row, int *col);
+void flood_fill(t_map *map, int row, int col, char **map_copy, int *exit_found, int *coin_found);
+// parsing
 char **grid_map(int rows, int fd);
 char **copy_map(char **grid, size_t rows, size_t cols);
-void find_player(t_map *map, int *x, int *y);
-void flood_fill(t_map *map, int x, int y, char **map_copy, int *exit_found, int *coin_found);
 void validate_map(t_map *map);
-// memory management
-void free_2dmap(char **grid);
-
+void ft_parsing(t_map *map, int argc, char **argv);
+// player mov
+void find_door(t_map *map);
+void print_moves(char *str, int count);
+void move_player(t_game *game, int row_delta, int col_delta);
+int key_hook(int keycode, void *param);
 #endif
