@@ -12,17 +12,17 @@
 
 #include "so_long.h"
 
-void exit_error(char *err, int per, char *str, char **arr)
+void exit_error(char *err, t_game *game, char *str, char **arr)
 {
 	write(2, "Error\n", 6);
 	if (err)
 		write(2, err, ft_strlen(err));
-	if (per)
-		perror("");
 	if (str)
 		free(str);
 	if (arr)
 		free_2dmap(arr);
+	if (game)
+		close_game(game, EXIT_FAILURE);
 	exit(EXIT_FAILURE);
 }
 
@@ -49,6 +49,8 @@ int close_game(t_game *game, int status)
 		mlx_destroy_image(game->mlx, game->grass);
 	if (game->broke_door)
 		mlx_destroy_image(game->mlx, game->broke_door);
+	if (game->open_door)
+		mlx_destroy_image(game->mlx, game->open_door);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)

@@ -12,18 +12,18 @@
 
 #include "so_long.h"
 
-void	my_mlx_img(t_game *game, void *img, int x, int y)
+void my_mlx_img(t_game *game, void *img, int x, int y)
 {
-	int	mlx_img;
+	int mlx_img;
 
 	mlx_img = mlx_put_image_to_window(game->mlx, game->win, img, x, y);
 	if (!mlx_img)
-		exit(EXIT_FAILURE);
+		exit_error("Mlx image failed\n", game, NULL, NULL);
 }
 
-void	map_rendering(t_game *game)
+void map_rendering(t_game *game)
 {
-	int (i), (j), (yy), (xx);
+	int(i), (j), (yy), (xx);
 	i = 0;
 	yy = 0;
 	while (i < game->map->rows)

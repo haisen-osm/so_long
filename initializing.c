@@ -22,33 +22,43 @@ void initialize_map(t_map *map)
 	map->extra_char = 0;
 }
 
-void xpm_to_image(void *img, t_game *game, char *path)
+void xpm_to_image(void **img, t_game *game, char *path)
 {
-	int x;
-	int y;
+	int x = 64;
+	int y = 64;
 
-	x = 64;
-	y = 64;
-	img = mlx_xpm_file_to_image(game->mlx, path, &x, &y);
-	if (!img)
-		exit_error(ERR_MLX_FAILED, 0, NULL, NULL);
+	*img = mlx_xpm_file_to_image(game->mlx, path, &x, &y);
+	if (!(*img))
+		exit_error(ERR_MLX_FAILED, game, NULL, NULL);
 }
-
+void ini_game(t_game *game)
+{
+	game->broke_door = NULL;
+	game->collected_coins = 0;
+	game->moves_count = 0;
+	game->diamond = NULL;
+	game->grass = NULL;
+	game->map = NULL;
+	game->mlx = NULL;
+	game->open_door = NULL;
+	game->player = NULL;
+	game->wall = NULL;
+	game->win = NULL;
+}
 void game_init(t_map *map, t_game *game)
 {
+	ini_game(game);
 	game->mlx = mlx_init();
 	if (!game->mlx)
-		exit_error(ERR_MLX_FAILED, 0, NULL, map->grid);
+		exit_error(ERR_MLX_FAILED, NULL, NULL, map->grid);
 	game->map = map;
 	game->win = mlx_new_window(game->mlx, game->map->cols * 64, game->map->rows * 64, GAME_TITLE);
 	if (!game->win)
-		exit_error(ERR_MLX_FAILED, 0, NULL, game->map->grid);
-	xpm_to_image(game->player, game, "textures/player.xpm");
-	xpm_to_image(game->diamond, game, "textures/diamond.xpm");
-	xpm_to_image(game->wall, game, "textures/wall.xpm");
-	xpm_to_image(game->grass, game, "textures/stone.xpm");
-	xpm_to_image(game->broke_door, game, "textures/closed_exit.xpm");
-	xpm_to_image(game->open_door, game, "textures/open_exit.xpm");
-	game->collected_coins = 0;
-	game->moves_count = 0;
+		exit_error(ERR_MLX_FAILED, game, NULL, NULL);
+	xpm_to_image(&game->player, game, "textures/player.xpm");
+	xpm_to_image(&game->diamond, game, "textures/diamond.xpm");
+	xpm_to_image(&game->wall, game, "textures/wall.xpm");
+	xpm_to_image(&game->grass, game, "textures/stone.xpm");
+	xpm_to_image(&game->broke_door, game, "textures/closed_exit.xpm");
+	xpm_to_image(&game->open_door, game, "textures/open_exit.xpm");
 }

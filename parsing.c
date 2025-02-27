@@ -82,7 +82,7 @@ void ft_parsing(t_map *map, int argc, char **argv)
 	check_arguments(argc, argv);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		exit_error(ERR_OPEN, 1, NULL, NULL);
+		exit_error(ERR_OPEN, NULL, NULL, NULL);
 	initialize_map(map);
 	check_map(map, fd);
 	close(fd);

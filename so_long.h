@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "minilibx-linux/mlx.h"
-// #include <X11/keysym.h>
+#include <X11/keysym.h>
 // #include <mlx.h>
 
 typedef struct s_map
@@ -80,7 +80,7 @@ void ft_putstr(char *str);
 void ft_putnbr(int n);
 void ft_putchar(char c);
 // clean and exit
-void exit_error(char *err, int per, char *str, char **arr);
+void exit_error(char *err, t_game *game, char *str, char **arr);
 void free_2dmap(char **grid);
 int close_game(t_game *game, int status);
 // checkers
@@ -93,8 +93,9 @@ void check_map(t_map *map, int fd);
 void my_mlx_img(t_game *game, void *img, int x, int y);
 void map_rendering(t_game *game);
 // initializing
+void ini_game(t_game *game);
 void initialize_map(t_map *map);
-void xpm_to_image(void *img, t_game *game, char *path);
+void xpm_to_image(void **img, t_game *game, char *path);
 void game_init(t_map *map, t_game *game);
 // parsing utils
 void find_player(t_map *map, int *row, int *col);

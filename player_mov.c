@@ -103,7 +103,7 @@ int key_hook(int keycode, void *param)
 		move_player(game, 0, -1);
 	else if (keycode == 100)
 		move_player(game, 0, 1);
-	// else if (keycode == XK_Escape)
-	// 	close_game(game);
+	else if (keycode == XK_Escape)
+		close_game(game, EXIT_FAILURE);
 	return (0);
 }
