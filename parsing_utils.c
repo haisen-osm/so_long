@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 16:47:24 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/25 17:15:08 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:01:03 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,24 @@ void find_player(t_map *map, int *row, int *col)
 	}
 }
 
-void flood_fill(t_map *map, int row, int col, char **map_copy,
-				int *exit_found, int *coin_found)
+static void recursive_flood_fill(t_flood *data, int row, int col)
 {
-	if (row < 0 || col < 0 || row >= map->rows || col >= map->cols)
+	if (row < 0 || col < 0 || row >= data->map->rows || col >= data->map->cols)
 		return;
-	if (map_copy[row][col] == '1' || map_copy[row][col] == 'V')
+	if (data->map_copy[row][col] == '1' || data->map_copy[row][col] == 'V')
 		return;
-	if (map_copy[row][col] == 'C')
-		(*coin_found)++;
-	if (map_copy[row][col] == 'E')
-		(*exit_found) = 1;
-	map_copy[row][col] = 'V';
-	flood_fill(map, row + 1, col, map_copy, exit_found, coin_found);
-	flood_fill(map, row - 1, col, map_copy, exit_found, coin_found);
-	flood_fill(map, row, col + 1, map_copy, exit_found, coin_found);
-	flood_fill(map, row, col - 1, map_copy, exit_found, coin_found);
+	if (data->map_copy[row][col] == 'C')
+		(*data->coin_found)++;
+	if (data->map_copy[row][col] == 'E')
+		(*data->exit_found) = 1;
+	data->map_copy[row][col] = 'V';
+	recursive_flood_fill(data, row + 1, col);
+	recursive_flood_fill(data, row - 1, col);
+	recursive_flood_fill(data, row, col + 1);
+	recursive_flood_fill(data, row, col - 1);
+}
+
+void flood_fill(t_map *map, int row, int col, t_flood *data)
+{
+	recursive_flood_fill(data, row, col);
 }

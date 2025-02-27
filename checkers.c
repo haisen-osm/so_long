@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:05:49 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/25 17:05:49 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:53:29 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 int check_extension(char *path)
 {
-	int len = ft_strlen(path);
+	int len;
+	int i;
 
+	len = ft_strlen(path);
 	if (len < 5)
 		return (0);
 	if (ft_strcmp(path + len - 4, ".ber") != 0)
 		return (0);
-	int i = len - 5;
+	i = len - 5;
 	while (i >= 0)
 	{
 		if (path[i] == '/')
@@ -32,8 +34,9 @@ int check_extension(char *path)
 
 void check_borders(char *str, t_map *map, int is_first, int is_last)
 {
-	int i = 0;
+	int i;
 
+	i = 0;
 	while (str[i] && str[i] != '\n')
 	{
 		if ((is_first || is_last) && str[i] != '1')
@@ -47,6 +50,7 @@ void check_borders(char *str, t_map *map, int is_first, int is_last)
 void check_player_and_coins(char *str, t_map *map)
 {
 	int i;
+
 	i = 0;
 	while (str[i] && str[i] != '\n')
 	{
@@ -55,12 +59,13 @@ void check_player_and_coins(char *str, t_map *map)
 		else if (str[i] == 'C')
 			map->coin++;
 		else if (str[i] == 'E')
-			map->exitDoor++;
+			map->exit_door++;
 		else if (str[i] != '0' && str[i] != '1')
 			map->extra_char++;
 		i++;
 	}
 }
+
 void check_arguments(int argc, char *argv[])
 {
 	if (argc != 2)

@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 16:33:14 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/26 11:34:52 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:01:18 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,16 @@ void validate_map(t_map *map)
 {
 	int exit_found;
 	int coin_found;
-	int row;
-	int col;
+	t_flood data;
 
-	find_player(map, &row, &col);
+	find_player(map, &data.map->door_row, &data.map->door_col);
 	exit_found = 0;
 	coin_found = 0;
-	flood_fill(map, row, col, map->grid_copy, &exit_found, &coin_found);
+	data.map = map;
+	data.map_copy = map->grid_copy;
+	data.exit_found = &exit_found;
+	data.coin_found = &coin_found;
+	flood_fill(map, data.map->door_row, data.map->door_col, &data);
 	if (coin_found != map->coin || exit_found != 1)
 		exit_error(ERR_NOT_REACHABLE, 0, NULL, NULL);
 }
@@ -90,7 +93,7 @@ void ft_parsing(t_map *map, int argc, char **argv)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
 	if (!map->is_valid)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
-	if (map->player != 1 || map->coin == 0 || map->exitDoor != 1 || map->extra_char > 0)
+	if (map->player != 1 || map->coin == 0 || map->exit_door != 1 || map->extra_char > 0)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
 	if ((map->rows * 64) > 2160 || (map->cols * 64) > 3840)
 		exit_error("Map size bigger than screen size\n", 0, 0, 0);

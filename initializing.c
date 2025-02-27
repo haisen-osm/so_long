@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 16:44:37 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/26 11:13:51 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:53:29 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,22 @@ void initialize_map(t_map *map)
 	map->is_valid = 1;
 	map->player = 0;
 	map->coin = 0;
-	map->exitDoor = 0;
+	map->exit_door = 0;
 	map->extra_char = 0;
 }
 
 void xpm_to_image(void **img, t_game *game, char *path)
 {
-	int x = 64;
-	int y = 64;
+	int x;
+	int y;
 
+	x = 64;
+	y = 64;
 	*img = mlx_xpm_file_to_image(game->mlx, path, &x, &y);
 	if (!(*img))
 		exit_error(ERR_MLX_FAILED, game, NULL, NULL);
 }
+
 void ini_game(t_game *game)
 {
 	game->broke_door = NULL;
@@ -45,6 +48,7 @@ void ini_game(t_game *game)
 	game->wall = NULL;
 	game->win = NULL;
 }
+
 void game_init(t_map *map, t_game *game)
 {
 	ini_game(game);

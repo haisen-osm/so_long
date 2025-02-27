@@ -6,19 +6,19 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/25 21:39:41 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:56:04 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 #define SO_LONG_H
 
+#include "minilibx-linux/mlx.h"
+#include <X11/keysym.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include "minilibx-linux/mlx.h"
-#include <X11/keysym.h>
 // #include <mlx.h>
 
 typedef struct s_map
@@ -28,7 +28,7 @@ typedef struct s_map
 	int is_valid;
 	int player;
 	int coin;
-	int exitDoor;
+	int exit_door;
 	int extra_char;
 	char **grid;
 	char **grid_copy;
@@ -50,6 +50,22 @@ typedef struct s_game
 	int collected_coins;
 	int moves_count;
 } t_game;
+
+typedef struct s_position
+{
+	int row;
+	int col;
+} t_position;
+
+typedef struct s_flood
+{
+	t_map *map;
+	char **map_copy;
+	int row;
+	int col;
+	int *exit_found;
+	int *coin_found;
+} t_flood;
 
 #define EXTENSTION ".ber"
 #define ERR_ARGS "Invalid number of arguments\n"
@@ -82,7 +98,7 @@ void ft_putchar(char c);
 // clean and exit
 void exit_error(char *err, t_game *game, char *str, char **arr);
 void free_2dmap(char **grid);
-int close_game(t_game *game, int status);
+int close_game(t_game *game, int status, char **map);
 // checkers
 int check_extension(char *path);
 void check_borders(char *str, t_map *map, int is_first, int is_last);
@@ -99,7 +115,8 @@ void xpm_to_image(void **img, t_game *game, char *path);
 void game_init(t_map *map, t_game *game);
 // parsing utils
 void find_player(t_map *map, int *row, int *col);
-void flood_fill(t_map *map, int row, int col, char **map_copy, int *exit_found, int *coin_found);
+void flood_fill(t_map *map, int row, int col, char **map_copy,
+				int *exit_found, int *coin_found);
 // parsing
 char **grid_map(int rows, int fd);
 char **copy_map(char **grid, size_t rows, size_t cols);
