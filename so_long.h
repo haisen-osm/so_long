@@ -57,6 +57,14 @@ typedef struct s_position
 	int col;
 } t_position;
 
+typedef struct s_flood
+{
+	int exit_found;
+	int coin_found;
+	int row;
+	int col;
+} t_flood;
+
 #define EXTENSTION ".ber"
 #define ERR_ARGS "Invalid number of arguments\n"
 #define ERR_EXT "Wrong file extension. Expected '.ber'\n"
@@ -88,7 +96,7 @@ void ft_putchar(char c);
 // clean and exit
 void exit_error(char *err, t_game *game, char *str, char **arr);
 void free_2dmap(char **grid);
-int close_game(t_game *game, int status, char **map);
+int close_game(t_game *game, int status);
 // checkers
 int check_extension(char *path);
 void check_borders(char *str, t_map *map, int is_first, int is_last);
@@ -105,9 +113,7 @@ void xpm_to_image(void **img, t_game *game, char *path);
 void game_init(t_map *map, t_game *game);
 // parsing utils
 void find_player(t_map *map, int *row, int *col);
-void flood_fill(t_map *map, int row, int col, char **map_copy,
-				int *exit_found, int *coin_found);
-// parsing
+void flood_fill(t_map *map, t_flood *flood, int col, int row);
 char **grid_map(int rows, int fd);
 char **copy_map(char **grid, size_t rows, size_t cols);
 void validate_map(t_map *map);

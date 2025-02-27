@@ -43,7 +43,7 @@ static void handle_player_move(t_game *game, t_position old_pos,
 	if (game->map->grid[new_pos.row][new_pos.col] == 'E' && game->map->coin == game->collected_coins)
 	{
 		ft_putstr("You won!\n");
-		close_game(game, EXIT_SUCCESS, game->map->grid);
+		close_game(game, EXIT_SUCCESS);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->grass, old_pos.col * 64,
 							old_pos.row * 64);
@@ -81,6 +81,6 @@ int key_hook(int keycode, void *param)
 	else if (keycode == 100)
 		move_player(game, 0, 1);
 	else if (keycode == XK_Escape)
-		close_game(game, EXIT_FAILURE, game->map->grid);
+		close_game(game, EXIT_FAILURE);
 	return (0);
 }

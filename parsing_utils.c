@@ -35,20 +35,23 @@ void find_player(t_map *map, int *row, int *col)
 	}
 }
 
-void flood_fill(t_map *map, int row, int col, char **map_copy,
-				int *exit_found, int *coin_found)
+void flood_fill(t_map *map, t_flood *flood, int col, int row)
 {
 	if (row < 0 || col < 0 || row >= map->rows || col >= map->cols)
 		return;
-	if (map_copy[row][col] == '1' || map_copy[row][col] == 'V')
+	if (map->grid_copy[row][col] == '1' || map->grid_copy[row][col] == 'V')
 		return;
-	if (map_copy[row][col] == 'C')
-		(*coin_found)++;
-	if (map_copy[row][col] == 'E')
-		(*exit_found) = 1;
-	map_copy[row][col] = 'V';
-	flood_fill(map, row + 1, col, map_copy, exit_found, coin_found);
-	flood_fill(map, row - 1, col, map_copy, exit_found, coin_found);
-	flood_fill(map, row, col + 1, map_copy, exit_found, coin_found);
-	flood_fill(map, row, col - 1, map_copy, exit_found, coin_found);
+	if (map->grid_copy[row][col] == 'C')
+		flood->coin_found++;
+	if (map->grid_copy[row][col] == 'E')
+	{
+		flood->exit_found = 1;
+		map->grid_copy[row][col] = 'V';
+		return;
+	}
+	map->grid_copy[row][col] = 'V';
+	flood_fill(map, flood, col + 1, row);
+	flood_fill(map, flood, col - 1, row);
+	flood_fill(map, flood, col, row + 1);
+	flood_fill(map, flood, col, row - 1);
 }

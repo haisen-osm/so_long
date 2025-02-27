@@ -62,16 +62,13 @@ char **copy_map(char **grid, size_t rows, size_t cols)
 
 void validate_map(t_map *map)
 {
-	int exit_found;
-	int coin_found;
-	int row;
-	int col;
+	t_flood flood;
 
-	find_player(map, &row, &col);
-	exit_found = 0;
-	coin_found = 0;
-	flood_fill(map, row, col, map->grid_copy, &exit_found, &coin_found);
-	if (coin_found != map->coin || exit_found != 1)
+	find_player(map, &flood.row, &flood.col);
+	flood.exit_found = 0;
+	flood.coin_found = 0;
+	flood_fill(map, &flood, flood.col, flood.row);
+	if (flood.coin_found != map->coin || flood.exit_found != 1)
 		exit_error(ERR_NOT_REACHABLE, 0, NULL, NULL);
 }
 

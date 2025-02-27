@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-void	exit_error(char *err, t_game *game, char *str, char **arr)
+void exit_error(char *err, t_game *game, char *str, char **arr)
 {
 	write(2, "Error\n", 6);
 	if (err)
@@ -22,13 +22,13 @@ void	exit_error(char *err, t_game *game, char *str, char **arr)
 	if (arr)
 		free_2dmap(arr);
 	if (game)
-		close_game(game, EXIT_FAILURE, game->map->grid);
+		close_game(game, EXIT_FAILURE);
 	exit(EXIT_FAILURE);
 }
 
-void	free_2dmap(char **grid)
+void free_2dmap(char **grid)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (grid[i])
@@ -39,7 +39,7 @@ void	free_2dmap(char **grid)
 	free(grid);
 }
 
-int	close_game(t_game *game, int status, char **map)
+int close_game(t_game *game, int status)
 {
 	if (game->player)
 		mlx_destroy_image(game->mlx, game->player);
@@ -60,8 +60,8 @@ int	close_game(t_game *game, int status, char **map)
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}
-	if (map)
-		free_2dmap(map);
+	if (game->map->grid)
+		free_2dmap(game->map->grid);
 	exit(status);
 	return (0);
 }
