@@ -1,10 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/27 23:21:37 by okhourss          #+#    #+#             */
+/*   Updated: 2025/02/27 23:21:38 by okhourss         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
-void ft_putstr(char *str)
+void	ft_putstr(char *str)
 {
-	size_t i = 0;
+	size_t	i;
+
+	i = 0;
 	if (!str)
-		return;
+		return ;
 	while (str[i])
 	{
 		write(1, &str[i], 1);

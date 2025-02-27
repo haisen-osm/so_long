@@ -6,16 +6,16 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:05:49 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/27 20:53:29 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:15:40 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int check_extension(char *path)
+int	check_extension(char *path)
 {
-	int len;
-	int i;
+	int	len;
+	int	i;
 
 	len = ft_strlen(path);
 	if (len < 5)
@@ -32,9 +32,9 @@ int check_extension(char *path)
 	return (1);
 }
 
-void check_borders(char *str, t_map *map, int is_first, int is_last)
+void	check_borders(char *str, t_map *map, int is_first, int is_last)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != '\n')
@@ -47,9 +47,9 @@ void check_borders(char *str, t_map *map, int is_first, int is_last)
 	}
 }
 
-void check_player_and_coins(char *str, t_map *map)
+void	check_player_and_coins(char *str, t_map *map)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != '\n')
@@ -66,7 +66,7 @@ void check_player_and_coins(char *str, t_map *map)
 	}
 }
 
-void check_arguments(int argc, char *argv[])
+void	check_arguments(int argc, char *argv[])
 {
 	if (argc != 2)
 		exit_error(ERR_ARGS, 0, NULL, NULL);
@@ -74,11 +74,11 @@ void check_arguments(int argc, char *argv[])
 		exit_error(ERR_EXT, 0, NULL, NULL);
 }
 
-void check_map(t_map *map, int fd)
+void	check_map(t_map *map, int fd)
 {
-	char *str;
+	char	*str;
 
-	int(i), (len), (current_len);
+	int (i), (len), (current_len);
 	i = 0;
 	str = get_next_line(fd);
 	while (str != NULL)

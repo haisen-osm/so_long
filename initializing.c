@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-void initialize_map(t_map *map)
+void	initialize_map(t_map *map)
 {
 	map->rows = 0;
 	map->is_valid = 1;
@@ -22,10 +22,10 @@ void initialize_map(t_map *map)
 	map->extra_char = 0;
 }
 
-void xpm_to_image(void **img, t_game *game, char *path)
+void	xpm_to_image(void **img, t_game *game, char *path)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = 64;
 	y = 64;
@@ -34,7 +34,7 @@ void xpm_to_image(void **img, t_game *game, char *path)
 		exit_error(ERR_MLX_FAILED, game, NULL, NULL);
 }
 
-void ini_game(t_game *game)
+void	ini_game(t_game *game)
 {
 	game->broke_door = NULL;
 	game->collected_coins = 0;
@@ -49,14 +49,15 @@ void ini_game(t_game *game)
 	game->win = NULL;
 }
 
-void game_init(t_map *map, t_game *game)
+void	game_init(t_map *map, t_game *game)
 {
 	ini_game(game);
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		exit_error(ERR_MLX_FAILED, NULL, NULL, map->grid);
 	game->map = map;
-	game->win = mlx_new_window(game->mlx, game->map->cols * 64, game->map->rows * 64, GAME_TITLE);
+	game->win = mlx_new_window(game->mlx, game->map->cols * 64, game->map->rows
+			* 64, GAME_TITLE);
 	if (!game->win)
 		exit_error(ERR_MLX_FAILED, game, NULL, NULL);
 	xpm_to_image(&game->player, game, "textures/player.xpm");

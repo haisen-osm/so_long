@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-void exit_error(char *err, t_game *game, char *str, char **arr)
+void	exit_error(char *err, t_game *game, char *str, char **arr)
 {
 	write(2, "Error\n", 6);
 	if (err)
@@ -26,9 +26,9 @@ void exit_error(char *err, t_game *game, char *str, char **arr)
 	exit(EXIT_FAILURE);
 }
 
-void free_2dmap(char **grid)
+void	free_2dmap(char **grid)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (grid[i])
@@ -39,7 +39,7 @@ void free_2dmap(char **grid)
 	free(grid);
 }
 
-int close_game(t_game *game, int status)
+int	close_game(t_game *game, int status)
 {
 	if (game->player)
 		mlx_destroy_image(game->mlx, game->player);

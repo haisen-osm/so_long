@@ -12,11 +12,11 @@
 
 #include "so_long.h"
 
-char **grid_map(int rows, int fd)
+char	**grid_map(int rows, int fd)
 {
-	char *str;
-	char **arr;
-	int i;
+	char	*str;
+	char	**arr;
+	int		i;
 
 	arr = malloc(sizeof(char *) * (rows + 1));
 	if (!arr)
@@ -33,10 +33,10 @@ char **grid_map(int rows, int fd)
 	return (arr);
 }
 
-char **copy_map(char **grid, size_t rows, size_t cols)
+char	**copy_map(char **grid, size_t rows, size_t cols)
 {
-	char **copy;
-	size_t i;
+	char	**copy;
+	size_t	i;
 
 	(void)cols;
 	copy = malloc(sizeof(char *) * (rows + 1));
@@ -60,9 +60,9 @@ char **copy_map(char **grid, size_t rows, size_t cols)
 	return (copy);
 }
 
-void validate_map(t_map *map)
+void	validate_map(t_map *map)
 {
-	t_flood flood;
+	t_flood	flood;
 
 	find_player(map, &flood.row, &flood.col);
 	flood.exit_found = 0;
@@ -72,9 +72,9 @@ void validate_map(t_map *map)
 		exit_error(ERR_NOT_REACHABLE, 0, NULL, NULL);
 }
 
-void ft_parsing(t_map *map, int argc, char **argv)
+void	ft_parsing(t_map *map, int argc, char **argv)
 {
-	int fd;
+	int	fd;
 
 	check_arguments(argc, argv);
 	fd = open(argv[1], O_RDONLY);
@@ -87,7 +87,8 @@ void ft_parsing(t_map *map, int argc, char **argv)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
 	if (!map->is_valid)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
-	if (map->player != 1 || map->coin == 0 || map->exit_door != 1 || map->extra_char > 0)
+	if (map->player != 1 || map->coin == 0 || map->exit_door != 1
+		|| map->extra_char > 0)
 		exit_error(ERR_INVALID_MAP, 0, NULL, NULL);
 	if ((map->rows * 64) > 2160 || (map->cols * 64) > 3840)
 		exit_error("Map size bigger than screen size\n", 0, 0, 0);

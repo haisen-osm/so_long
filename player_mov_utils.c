@@ -12,10 +12,10 @@
 
 #include "so_long.h"
 
-void find_door(t_map *map)
+void	find_door(t_map *map)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < map->rows)
@@ -27,7 +27,7 @@ void find_door(t_map *map)
 			{
 				map->door_row = i;
 				map->door_col = j;
-				return;
+				return ;
 			}
 			j++;
 		}

@@ -12,10 +12,10 @@
 
 #include "so_long.h"
 
-void find_player(t_map *map, int *row, int *col)
+void	find_player(t_map *map, int *row, int *col)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < map->rows)
@@ -27,7 +27,7 @@ void find_player(t_map *map, int *row, int *col)
 			{
 				*row = i;
 				*col = j;
-				return;
+				return ;
 			}
 			j++;
 		}
@@ -35,19 +35,19 @@ void find_player(t_map *map, int *row, int *col)
 	}
 }
 
-void flood_fill(t_map *map, t_flood *flood, int col, int row)
+void	flood_fill(t_map *map, t_flood *flood, int col, int row)
 {
 	if (row < 0 || col < 0 || row >= map->rows || col >= map->cols)
-		return;
+		return ;
 	if (map->grid_copy[row][col] == '1' || map->grid_copy[row][col] == 'V')
-		return;
+		return ;
 	if (map->grid_copy[row][col] == 'C')
 		flood->coin_found++;
 	if (map->grid_copy[row][col] == 'E')
 	{
 		flood->exit_found = 1;
 		map->grid_copy[row][col] = 'V';
-		return;
+		return ;
 	}
 	map->grid_copy[row][col] = 'V';
 	flood_fill(map, flood, col + 1, row);
