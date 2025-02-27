@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 16:33:14 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/27 21:01:18 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:06:52 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,13 @@ void validate_map(t_map *map)
 {
 	int exit_found;
 	int coin_found;
-	t_flood data;
+	int row;
+	int col;
 
-	find_player(map, &data.map->door_row, &data.map->door_col);
+	find_player(map, &row, &col);
 	exit_found = 0;
 	coin_found = 0;
-	data.map = map;
-	data.map_copy = map->grid_copy;
-	data.exit_found = &exit_found;
-	data.coin_found = &coin_found;
-	flood_fill(map, data.map->door_row, data.map->door_col, &data);
+	flood_fill(map, row, col, map->grid_copy, &exit_found, &coin_found);
 	if (coin_found != map->coin || exit_found != 1)
 		exit_error(ERR_NOT_REACHABLE, 0, NULL, NULL);
 }

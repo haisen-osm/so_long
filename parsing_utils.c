@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 16:47:24 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/27 21:01:03 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:07:04 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,16 @@ static void recursive_flood_fill(t_flood *data, int row, int col)
 	recursive_flood_fill(data, row, col - 1);
 }
 
-void flood_fill(t_map *map, int row, int col, t_flood *data)
+void flood_fill(t_map *map, int row, int col, char **map_copy,
+				int *exit_found, int *coin_found)
 {
-	recursive_flood_fill(data, row, col);
+	t_flood data;
+
+	data.map = map;
+	data.map_copy = map_copy;
+	data.row = row;
+	data.col = col;
+	data.exit_found = exit_found;
+	data.coin_found = coin_found;
+	recursive_flood_fill(&data, row, col);
 }

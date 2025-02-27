@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/27 20:56:04 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/27 21:06:59 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,6 @@ typedef struct s_position
 	int row;
 	int col;
 } t_position;
-
-typedef struct s_flood
-{
-	t_map *map;
-	char **map_copy;
-	int row;
-	int col;
-	int *exit_found;
-	int *coin_found;
-} t_flood;
 
 #define EXTENSTION ".ber"
 #define ERR_ARGS "Invalid number of arguments\n"
