@@ -64,9 +64,9 @@ void check_player_and_coins(char *str, t_map *map)
 void check_arguments(int argc, char *argv[])
 {
 	if (argc != 2)
-		exit_error(ERR_ARGS, 0);
+		exit_error(ERR_ARGS, 0, NULL, NULL);
 	if (!check_extension(argv[1]))
-		exit_error(ERR_EXT, 0);
+		exit_error(ERR_EXT, 0, NULL, NULL);
 }
 
 void check_map(t_map *map, int fd)
@@ -80,10 +80,7 @@ void check_map(t_map *map, int fd)
 	{
 		len = ft_strlen(str);
 		if (len == 1 && str[0] == '\n')
-		{
-			free(str);
-			exit_error(ERR_EMPTY_LINE, 0);
-		}
+			exit_error(ERR_EMPTY_LINE, 0, str, NULL);
 		if (str[len - 1] == '\n')
 			current_len = len - 1;
 		else

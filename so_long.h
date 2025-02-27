@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/25 17:46:29 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/25 21:39:41 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ void ft_putstr(char *str);
 void ft_putnbr(int n);
 void ft_putchar(char c);
 // clean and exit
-void exit_error(char *err, int per);
+void exit_error(char *err, int per, char *str, char **arr);
 void free_2dmap(char **grid);
-int close_game(t_game *game);
+int close_game(t_game *game, int status);
 // checkers
 int check_extension(char *path);
 void check_borders(char *str, t_map *map, int is_first, int is_last);
@@ -94,7 +94,7 @@ void my_mlx_img(t_game *game, void *img, int x, int y);
 void map_rendering(t_game *game);
 // initializing
 void initialize_map(t_map *map);
-void xpm_to_image(void *img, void *mlx, char *path);
+void xpm_to_image(void *img, t_game *game, char *path);
 void game_init(t_map *map, t_game *game);
 // parsing utils
 void find_player(t_map *map, int *row, int *col);

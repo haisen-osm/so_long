@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:06:30 by okhourss          #+#    #+#             */
-/*   Updated: 2025/02/25 17:48:42 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/02/25 21:40:06 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void handle_player_move(t_game *game, int row, int col, int new_row,
 	if (game->map->grid[new_row][new_col] == 'E' && game->map->coin == game->collected_coins)
 	{
 		ft_putstr("You won!\n");
-		close_game(game);
+		close_game(game, EXIT_SUCCESS);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->grass, col * 64, row * 64);
 	mlx_put_image_to_window(game->mlx, game->win, game->player, new_col * 64,

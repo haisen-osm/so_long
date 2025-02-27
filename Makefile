@@ -3,7 +3,7 @@ SRCS = helpers/ft_strchr.c helpers/ft_strcmp.c helpers/ft_putchar.c helpers/ft_p
 		checkers.c clean_and_exit.c game_rendring.c initializing.c parsing_utils.c parsing.c player_mov.c
 OBJS = $(SRCS:.c=.o)
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 
 all: $(NAME)
 
