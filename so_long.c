@@ -12,10 +12,10 @@
 
 #include "so_long.h"
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_map map;
-	t_game game;
+	t_map	map;
+	t_game	game;
 
 	ft_parsing(&map, argc, argv);
 	game_init(&map, &game);
