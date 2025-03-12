@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/03/07 21:46:45 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:22:34 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,9 @@ void		check_borders(char *str, t_map *map, int is_first, int is_last);
 void		check_player_and_coins(char *str, t_map *map);
 void		check_arguments(int argc, char *argv[]);
 void		check_map(t_map *map, int fd);
+void		validate_line(char *str, t_map *map, int is_first);
+void		check_last_line(char *last_line, t_map *map);
+
 // game rendering
 void		my_mlx_img(t_game *game, void *img, int x, int y);
 void		map_rendering(t_game *game);
