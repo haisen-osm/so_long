@@ -6,7 +6,7 @@
 /*   By: okhourss <okhourss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:09:28 by okhourss          #+#    #+#             */
-/*   Updated: 2025/03/12 09:22:34 by okhourss         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:33:48 by okhourss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef struct s_flood
 # define ERR_OPEN "Failed to open the file\n"
 # define ERR_EMPTY_LINE "Empty line detected in the map\n"
 # define ERR_INVALID_MAP "Invalid map structure\n"
-# define ERR_NOT_REACHABLE "Not all collectibles are reachable\n"
+# define ERR_NOT_REACHABLE "A collectible or an exit is not reachable\n"
 # define ERR_MLX_FAILED "Mlx connection failed\n"
 # define ERR_WIN_FAIL "Mlx failed creating a window\n"
 # define ERR_MLX_XPM_TO_IMG "Mlx failed to convert xpm to image\n"
